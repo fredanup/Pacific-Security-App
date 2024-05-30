@@ -13,61 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Laboratory {
-  id       String    @id @default(cuid())
-  name     String
-  products Product[]
-}
-
-model Presentation {
-  id           String    @id @default(cuid())
-  presentation String
-  products     Product[]
-}
-
-model Product {
-  id             String        @id @default(cuid())
-  name           String
-  quantity       Int
-  price          Float
-  Laboratory     Laboratory?   @relation(fields: [laboratoryId], references: [id])
-  laboratoryId   String?
-  Presentation   Presentation? @relation(fields: [presentationId], references: [id])
-  presentationId String?
-  examples       Example[]
-}
-
-model Sale {
-  id         String    @id @default(cuid())
-  buyerId    String
-  discount   Float
-  finalPrice Float
-  saleDate   DateTime
-  examples   Example[]
-}
-
-model Example {
-  id           String   @id @default(cuid())
-  move_type    String
-  move_date    DateTime
-  move_state   DateTime
-  Sale         Sale?    @relation(fields: [saleId], references: [id])
-  saleId       String?
-  Product      Product? @relation(fields: [productId], references: [id])
-  productId    String?
-  Provenance   Branch?  @relation(name: "Provenance", fields: [provenanceId], references: [id])
-  provenanceId String?
-  Destination  Branch?  @relation(name: "Destination", fields: [destinationd], references: [id])
-  destinationd String?
-}
-
 model Branch {
-  id          String    @id @default(cuid())
-  name        String
-  address     String?
-  users       User[]
-  provenance  Example[] @relation(name: "Provenance")
-  destination Example[] @relation(name: "Destination")
+  id      String  @id @default(cuid())
+  name    String
+  address String?
+  users   User[]
 }
 
 model User {
