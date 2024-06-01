@@ -20,6 +20,36 @@ model Branch {
   users   User[]
 }
 
+model Document {
+  id        String   @id @default(cuid())
+  document  String   @unique
+  key       String?
+  createdAt DateTime @default(now())
+}
+
+model Calling {
+  id           String   @id @default(cuid())
+  requirement  String
+  min_exp_work Int
+  User         User?    @relation(fields: [userId], references: [id])
+  userId       String?
+  createdAt    DateTime @default(now())
+  resultAt     DateTime @default(now())
+  expiresAt    DateTime @default(now())
+}
+
+model JobApplication {
+  id            String   @id @default(cuid())
+  status        String?
+  resumeKey     String?
+  createdAt     DateTime @default(now())
+  review        Boolean //Fue revisada la postulación?
+  interviewAt   DateTime
+  interviewLink String?
+  Postulant     User?    @relation(fields: [postulantId], references: [id])
+  postulantId   String?
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -34,10 +64,12 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Branch    Branch?  @relation(fields: [branchId], references: [id])
-  branchId  String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Branch          Branch?          @relation(fields: [branchId], references: [id])
+  branchId        String?
+  callings        Calling[]
+  jobApplications JobApplication[]
 }
 
 model Account {
