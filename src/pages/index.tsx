@@ -3,9 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Spinner from './utilities/spinner';
-import styles from '../styles/styles.module.css';
 import { trpc } from 'utils/trpc';
-import UnknownUser from './modals/unknown-user';
 
 export default function Home() {
   //Obtenemos la sesión de la bd
@@ -13,7 +11,7 @@ export default function Home() {
   /**
    * Consultas a base de datos
    */
-  //Obtener el usuario actual
+  //Obtener al usuario actual
   const { data: currentUser } = trpc.user.findOne.useQuery(
     session?.user?.id ?? '',
   );
@@ -29,24 +27,17 @@ export default function Home() {
     }
     if (session) {
       if (currentUser) {
-        if (currentUser.role !== null) {
-          if (currentUser.role !== 'Vendedor') {
-            // Si el usuario está autenticado, redirigir a la página protegida
-            router.replace('/dashboard/users').catch((error) => {
-              // Manejar cualquier error que pueda ocurrir al redirigir
-              console.error('Error al redirigir a la página principal:', error);
-            });
-          } else {
-            // Si el usuario está autenticado, redirigir a la página protegida
-            router.replace('/dashboard/products').catch((error) => {
-              // Manejar cualquier error que pueda ocurrir al redirigir
-              console.error('Error al redirigir a la página principal:', error);
-            });
-          }
-        } else {
-          router.replace('/modals/unknown-user').catch((error) => {
+        if (currentUser.role !== 'applicant') {
+          // Si el usuario es un postulante redirigir al menú de postulantes
+          router.replace('/dashboard/users').catch((error) => {
             // Manejar cualquier error que pueda ocurrir al redirigir
-            console.error('El usuario no tiene un rol asignado', error);
+            console.error('Error al redirigir a la página principal:', error);
+          });
+        } else {
+          // Si el usuario es un empleador redirigir al menú de postulantes
+          router.replace('/dashboard/callings').catch((error) => {
+            // Manejar cualquier error que pueda ocurrir al redirigir
+            console.error('Error al redirigir a la página principal:', error);
           });
         }
       }

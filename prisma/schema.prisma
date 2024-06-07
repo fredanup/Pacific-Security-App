@@ -51,19 +51,18 @@ model JobApplication {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  lastName      String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  //Role de usuario: Supervisor, administrador, vendedor
-  role          String?
-  accounts      Account[]
-  sessions      Session[]
+  id              String           @id @default(cuid())
+  name            String?
+  lastName        String?
+  email           String           @unique
+  emailVerified   DateTime?
+  image           String?
+  //Role de usuario: Applicant:Postulante, employer: Empleador
+  role            String           @default("applicant")
+  accounts        Account[]
+  sessions        Session[]
   // Optional for WebAuthn support
-  Authenticator Authenticator[]
-
+  Authenticator   Authenticator[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   Branch          Branch?          @relation(fields: [branchId], references: [id])
@@ -101,14 +100,6 @@ model Session {
   updatedAt    DateTime @updatedAt
 }
 
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
-}
-
 // Optional for WebAuthn support
 model Authenticator {
   id                   String  @id @default(cuid())
@@ -122,4 +113,12 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
 }
