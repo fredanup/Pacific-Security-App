@@ -72,7 +72,7 @@ export default function Users() {
     if (currentUser) {
       if (currentUser.role === 'applicant') {
         // Si el usuario está autenticado, redirigir a la página protegida
-        router.replace('/dashboard/products').catch((error) => {
+        router.replace('/dashboard/callings').catch((error) => {
           // Manejar cualquier error que pueda ocurrir al redirigir
           console.error('Error al redirigir a la página principal:', error);
         });
