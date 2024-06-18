@@ -40,7 +40,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.429.0",
+    "@aws-sdk/client-s3": "^3.600.0",
     "@aws-sdk/s3-request-presigner": "^3.429.0",
     "@ducanh2912/next-pwa": "^9.7.1",
     "@mercadopago/sdk-js": "^0.0.3",
