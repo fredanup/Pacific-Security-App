@@ -1,12 +1,40 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import CreateDocumentModal from 'pages/modals/create-document-modal';
 import FormTitle from 'pages/utilities/form-title';
 import Layout from 'pages/utilities/layout';
+
+import { useState } from 'react';
 import { trpc } from 'utils/trpc';
 
 export default function Profile() {
+  /**
+   * Declaraciones de hooks de estado
+   */
+  //Hook de estado que controla la apertura del modal de creación de documentos
+  const [isOpen, setIsOpen] = useState(false);
   //Obtener el usuario actual
   const { data: currentUser } = trpc.user.findCurrentOne.useQuery();
+  /**
+   * Consultas a base de datos
+   */
+  //Obtener los registros de bd
+  /* const { data, isLoading } = trpc.document.getUserDocuments.useQuery({
+    userId: currentUser!.id,
+  });*/
+
+  /**
+   * Funciones de apertura y cierre de modales
+   */
+  //Función de apertura del modal DocumentModal
+  const openModal = () => {
+    setIsOpen(true);
+  };
+  //Función de cierre del modal DocumentModal
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Layout>
@@ -67,6 +95,7 @@ export default function Profile() {
                     <svg
                       viewBox="0 0 448 512"
                       className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      onClick={openModal}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -233,6 +262,7 @@ export default function Profile() {
             </table>
           </div>
         </div>
+        <CreateDocumentModal isOpen={isOpen} onClose={closeModal} />
       </Layout>
     </>
   );

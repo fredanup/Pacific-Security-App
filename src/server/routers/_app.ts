@@ -6,11 +6,13 @@ import { observable } from '@trpc/server/observable';
 import { clearInterval } from 'timers';
 import { userRouter } from './user';
 import { branchRouter } from './branch';
+import { documentRouter } from './document';
 
 export const appRouter = createTRPCRouter({
   healthcheck: publicProcedure.query(() => 'yay!'),
   user: userRouter,
   branch: branchRouter,
+  document: documentRouter,
   randomNumber: publicProcedure.subscription(() => {
     return observable<number>((emit) => {
       const int = setInterval(() => {

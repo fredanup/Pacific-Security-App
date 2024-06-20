@@ -29,6 +29,11 @@ export const userBranchSchema = z.object({
 
   });
 
+  export const documentSchema = z.object({
+    document: z.string(),
+    key: z.string(),
+  });
+
   export type IUserBranch = z.infer<typeof userBranchSchema>;
   export type IEditUserBranch = z.infer<typeof editUserBranchSchema>;
   export type IBranch = z.infer<typeof branchSchema>;

@@ -1,3 +1,3 @@
-export default function CreateProductModal() {
+export default function CreateCallingModal() {
   return <></>;
 }

@@ -25,6 +25,8 @@ model Document {
   document  String   @unique
   key       String?
   createdAt DateTime @default(now())
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 model Calling {
@@ -69,6 +71,7 @@ model User {
   branchId        String?
   callings        Calling[]
   jobApplications JobApplication[]
+  documents       Document[]
 }
 
 model Account {
