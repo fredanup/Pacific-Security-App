@@ -42,7 +42,7 @@ export const userRouter = createTRPCRouter({
           data: {
             name: input.name,
             lastName: input.lastName,
-            role:input.role,
+            role:input.role!,
             branchId:input.branchId      
           },
         });
