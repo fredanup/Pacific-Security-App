@@ -6,9 +6,11 @@ import axios from 'axios';
 const CreateDocumentModal = ({
   isOpen,
   onClose,
+  opt,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  opt: string;
 }) => {
   //1. y 2. van de la mano
   //1. Hook que maneja estados de la prefirma con url, presignedUrl está vinculado a s3Url
@@ -41,12 +43,12 @@ const CreateDocumentModal = ({
     } else {
       document.body.classList.remove('overflow-hidden');
     }
-
+    setDocument(opt);
     // Limpiar la clase y remover el bloqueo al desmontar el modal
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isOpen]);
+  }, [isOpen, opt]);
 
   //Hook de dropzone que permite almacenar los objetos a subir
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
@@ -58,7 +60,7 @@ const CreateDocumentModal = ({
         const file = files[0] as File;
 
         fetchPresignedUrls({
-          key: file.name,
+          key: academicDocument,
         })
           .then((url) => {
             setPresignedUrl(url);
@@ -112,7 +114,7 @@ const CreateDocumentModal = ({
               presignedUrl !== null && acceptedFiles[0]?.name !== undefined
                 ? createUserDocument.mutate({
                     document: academicDocument,
-                    key: acceptedFiles[0]?.name,
+                    key: academicDocument,
                   })
                 : null;
               void handleSubmit();
@@ -152,18 +154,6 @@ const CreateDocumentModal = ({
               <ul className="text-sm font-light text-gray-500">{files}</ul>
             </aside>
 
-            <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-slate-900">
-                Título del documento:
-              </p>
-              <input
-                type="text"
-                className="focus:shadow-outline w-full appearance-none rounded-lg border px-2 py-1 leading-tight text-gray-700 focus:outline-none"
-                value={academicDocument}
-                onChange={(event) => setDocument(event.target.value)}
-                required
-              />
-            </div>
             <div className="mt-4 pt-4 flex flex-row justify-end gap-2 border-t border-gray-200">
               <button
                 type="button"

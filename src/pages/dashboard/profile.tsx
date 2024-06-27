@@ -15,6 +15,7 @@ export default function Profile() {
   const [isOpen, setIsOpen] = useState(false);
   //Obtener el usuario actual
   const { data: currentUser } = trpc.user.findCurrentOne.useQuery();
+  const [docType, setDoctype] = useState('');
   /**
    * Consultas a base de datos
    */
@@ -27,12 +28,14 @@ export default function Profile() {
    * Funciones de apertura y cierre de modales
    */
   //Función de apertura del modal DocumentModal
-  const openModal = () => {
+  const openModal = (opt: string) => {
     setIsOpen(true);
+    setDoctype(opt);
   };
   //Función de cierre del modal DocumentModal
   const closeModal = () => {
     setIsOpen(false);
+    setDoctype('');
   };
 
   return (
@@ -95,7 +98,7 @@ export default function Profile() {
                     <svg
                       viewBox="0 0 448 512"
                       className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                      onClick={openModal}
+                      onClick={() => openModal('DNI')}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -111,12 +114,12 @@ export default function Profile() {
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
                   <td className="py-4 pr-2">2</td>
-
                   <td className="py-4 pr-2">Carné SUCAMEC</td>
                   <td className="py-4 ">
                     <svg
                       viewBox="0 0 448 512"
                       className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      onClick={() => openModal('Carné SUCAMEC')}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -138,6 +141,7 @@ export default function Profile() {
                     <svg
                       viewBox="0 0 448 512"
                       className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      onClick={() => openModal('Licencia para portar armas')}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -161,6 +165,9 @@ export default function Profile() {
                     <svg
                       viewBox="0 0 448 512"
                       className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      onClick={() =>
+                        openModal('Antecedentes o Certificado único laboral')
+                      }
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -174,15 +181,19 @@ export default function Profile() {
                     </svg>
                   </td>
                 </tr>
+
                 <tr className="border-b border-gray-200 text-sm font-light">
                   <td className="py-4 pr-2">5</td>
                   <td className="py-4 pr-2">
-                    Certificado de capacitación SUCAMEC
+                    Certificado físico y psicológico
                   </td>
                   <td className="py-4 ">
                     <svg
                       viewBox="0 0 448 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
+                      onClick={() =>
+                        openModal('Certificado físico y psicológico')
+                      }
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -190,7 +201,7 @@ export default function Profile() {
                   <td className="py-4">
                     <svg
                       viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
                     >
                       <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
                     </svg>
@@ -198,13 +209,12 @@ export default function Profile() {
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
                   <td className="py-4 pr-2">6</td>
-                  <td className="py-4 pr-2">
-                    Certificado físico y psicológico
-                  </td>
+                  <td className="py-4 pr-2">Certificado de estudios</td>
                   <td className="py-4 ">
                     <svg
                       viewBox="0 0 448 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
+                      onClick={() => openModal('Certificado de estudios')}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -212,7 +222,7 @@ export default function Profile() {
                   <td className="py-4">
                     <svg
                       viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
                     >
                       <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
                     </svg>
@@ -220,31 +230,12 @@ export default function Profile() {
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
                   <td className="py-4 pr-2">7</td>
-                  <td className="py-4 pr-2">Certificado de estudios</td>
-                  <td className="py-4 ">
-                    <svg
-                      viewBox="0 0 448 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                    >
-                      <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
-                    </svg>
-                  </td>
-                  <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                    >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 text-sm font-light">
-                  <td className="py-4 pr-2">8</td>
                   <td className="py-4 pr-2">Certificado laboral</td>
                   <td className="py-4 ">
                     <svg
                       viewBox="0 0 448 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
+                      onClick={() => openModal('Certificado laboral')}
                     >
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
@@ -262,7 +253,11 @@ export default function Profile() {
             </table>
           </div>
         </div>
-        <CreateDocumentModal isOpen={isOpen} onClose={closeModal} />
+        <CreateDocumentModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          opt={docType}
+        />
       </Layout>
     </>
   );
