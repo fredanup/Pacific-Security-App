@@ -1,10 +1,12 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import CreateDocumentModal from 'pages/modals/create-document-modal';
 import FormTitle from 'pages/utilities/form-title';
 import Layout from 'pages/utilities/layout';
+import Spinner from 'pages/utilities/spinner';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { trpc } from 'utils/trpc';
 
 export default function Profile() {
@@ -13,16 +15,31 @@ export default function Profile() {
    */
   //Hook de estado que controla la apertura del modal de creación de documentos
   const [isOpen, setIsOpen] = useState(false);
+  const [userId, setUserId] = useState('');
   //Obtener el usuario actual
-  const { data: currentUser } = trpc.user.findCurrentOne.useQuery();
+  const { data: session, status } = useSession();
+
   const [docType, setDoctype] = useState('');
+
+  //Redireccion al usuario a Main
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      // Aquí puedes mostrar un spinner o cualquier indicador de carga mientras se verifica el estado de autenticación
+      return;
+    }
+    if (session) {
+      setUserId(session?.user?.id!);
+    }
+  }, [status, session]);
+
   /**
    * Consultas a base de datos
    */
   //Obtener los registros de bd
-  /* const { data, isLoading } = trpc.document.getUserDocuments.useQuery({
-    userId: currentUser!.id,
-  });*/
+  const { data, isLoading } = trpc.document.getUserDocuments.useQuery({
+    userId: userId,
+  });
+  const { data: currentUser } = trpc.user.findOne.useQuery(userId);
 
   /**
    * Funciones de apertura y cierre de modales
@@ -36,6 +53,11 @@ export default function Profile() {
   const closeModal = () => {
     setIsOpen(false);
     setDoctype('');
+  };
+
+  const urlDoc = (doc: string, userId: string) => {
+    let founded = data?.find((record) => record.key === doc);
+    return `https://pacificsecurity.s3.amazonaws.com/documents/${userId}/${founded?.key}`;
   };
 
   return (
@@ -103,13 +125,20 @@ export default function Profile() {
                       <path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z" />
                     </svg>
                   </td>
+
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                    >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                    <Link href={urlDoc('DNI', userId) ?? ''}>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('DNI', userId) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
@@ -125,12 +154,18 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                    >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                    <Link href={urlDoc('Carné SUCAMEC', userId) ?? ''}>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('Carné SUCAMEC', userId) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
@@ -147,12 +182,20 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                    <Link
+                      href={urlDoc('Licencia para portar armas', userId) ?? ''}
                     >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('Licencia para portar armas', userId) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
@@ -173,12 +216,28 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
+                    <Link
+                      href={
+                        urlDoc(
+                          'Antecedentes o Certificado único laboral',
+                          userId,
+                        ) ?? ''
+                      }
                     >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc(
+                            'Antecedentes o Certificado único laboral',
+                            userId,
+                          ) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
 
@@ -199,12 +258,23 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
+                    <Link
+                      href={
+                        urlDoc('Certificado físico y psicológico', userId) ?? ''
+                      }
                     >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('Certificado físico y psicológico', userId) !==
+                          null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
@@ -220,12 +290,20 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5`}
+                    <Link
+                      href={urlDoc('Certificado de estudios', userId) ?? ''}
                     >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('Certificado de estudios', userId) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
                 <tr className="border-b border-gray-200 text-sm font-light">
@@ -241,12 +319,18 @@ export default function Profile() {
                     </svg>
                   </td>
                   <td className="py-4">
-                    <svg
-                      viewBox="0 0 512 512"
-                      className={`h-8 w-8 cursor-pointer fill-gray-500 p-1.5  `}
-                    >
-                      <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
+                    <Link href={urlDoc('Certificado laboral', userId) ?? ''}>
+                      <svg
+                        viewBox="0 0 512 512"
+                        className={`h-8 w-8 cursor-pointer  p-1.5 ${
+                          urlDoc('Certificado laboral', userId) !== null
+                            ? 'fill-pink-500'
+                            : 'fill-gray-500'
+                        }  `}
+                      >
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
               </tbody>
