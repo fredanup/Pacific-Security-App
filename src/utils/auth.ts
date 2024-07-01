@@ -26,7 +26,6 @@ export const userBranchSchema = z.object({
     id:z.string(),
     name: z.string(),
     address: z.string().nullable(),     
-
   });
 
   export const documentSchema = z.object({
@@ -34,6 +33,19 @@ export const userBranchSchema = z.object({
     key: z.string(),
   });
 
+  export const createCallingSchema = z.object({
+    requirement:z.string(),
+    min_exp_work:z.number(),        
+    resultAt:z.date(),
+    expiresAt:z.date()
+  });
+
+  export const editCallingSchema = createCallingSchema.extend({
+    id:z.string(),  
+  });
+
   export type IUserBranch = z.infer<typeof userBranchSchema>;
   export type IEditUserBranch = z.infer<typeof editUserBranchSchema>;
   export type IBranch = z.infer<typeof branchSchema>;
+  export type ICreateCalling = z.infer<typeof createCallingSchema>;
+  export type IEditCalling = z.infer<typeof editCallingSchema>;

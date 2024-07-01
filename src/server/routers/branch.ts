@@ -1,6 +1,5 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { prisma } from 'server/prisma';
-import { editUserBranchSchema, userBranchSchema } from 'utils/auth';
 
 import { z } from 'zod';
 
